@@ -1,47 +1,99 @@
 import { useStorage, useIndexedDB } from 'react-omni-store';
 import './App.css';
 
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+}
+
 function App() {
-  const [count, setCount] = useStorage('count', 0);
+  // To-do list using localStorage
+  const [todos, setTodos] = useStorage<Todo[]>('todos', []);
+  const [newTodo, setNewTodo] = useStorage('new-todo', ''); // Persist in-progress new todo
+
+  // User name using sessionStorage
   const [name, setName] = useStorage('name', 'Guest', 'sessionStorage');
-  const [indexedDBCount, setIndexedDBCount] = useIndexedDB('indexedDBCount', 0);
+
+  // Theme preference using IndexedDB
+  const [theme, setTheme] = useIndexedDB<'light' | 'dark'>('theme', 'light');
+
+  const addTodo = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTodo.trim()) return;
+    setTodos([
+      ...todos,
+      { id: Date.now(), text: newTodo, completed: false },
+    ]);
+    setNewTodo('');
+  };
+
+  const toggleTodo = (id: number) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+  
+  const removeTodo = (id: number) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  }
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
 
   return (
-    <>
-      <h1>Vite + React + react-omni-store</h1>
-      <div className="card">
-        <button onClick={() => setCount((count: number) => count + 1)}>
-          count is {count}
-        </button>
-        <p>This count is stored in localStorage.</p>
-      </div>
+    <div className={`app ${theme}`}>
+      <h1>React Omni Store</h1>
+      <p>A better example: A To-Do List!</p>
 
       <div className="card">
+        <h2>Session Greeting (sessionStorage)</h2>
         <input
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={name === 'Guest' ? '' : name}
+          onChange={(e) => setName(e.target.value || 'Guest')}
+          placeholder="Enter your name"
         />
-        <p>Hello, {name}.</p>
-        <p>This name is stored in sessionStorage.</p>
+        <p>Hello, <strong>{name}</strong>!</p>
+        <p><small>This name is stored in sessionStorage and will be forgotten when you close the tab.</small></p>
       </div>
 
       <div className="card">
-        <button onClick={() => setIndexedDBCount((count: number) => count + 1)}>
-          IndexedDB count is {indexedDBCount}
-        </button>
-        <p>This count is stored in IndexedDB.</p>
-        <p>
-          Note: IndexedDB is asynchronous, so the value might take a moment to
-          load.
-        </p>
+        <h2>To-Do List (localStorage)</h2>
+        <form onSubmit={addTodo}>
+          <input
+            type="text"
+            value={newTodo}
+            onChange={(e) => setNewTodo(e.target.value)}
+            placeholder="What needs to be done?"
+          />
+          <button type="submit">Add</button>
+        </form>
+        <ul>
+          {todos.map((todo) => (
+            <li key={todo.id} className={todo.completed ? 'completed' : ''}>
+              <span onClick={() => toggleTodo(todo.id)}>{todo.text}</span>
+              <button onClick={() => removeTodo(todo.id)} className="remove-btn">X</button>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <p className="read-the-docs">
-        Check your browser's dev tools to see the values in localStorage,
-        sessionStorage, and IndexedDB.
+      <div className="card">
+        <h2>Theme Preference (IndexedDB)</h2>
+        <p>Current theme: <strong>{theme}</strong></p>
+        <button onClick={toggleTheme}>
+          Switch to {theme === 'light' ? 'Dark' : 'Light'} Mode
+        </button>
+      </div>
+
+       <p className="read-the-docs">
+        The greeting is in sessionStorage, todos are in localStorage, and the theme is in IndexedDB.
       </p>
-    </>
+    </div>
   );
 }
 
