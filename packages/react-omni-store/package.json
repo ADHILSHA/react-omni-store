@@ -1,14 +1,33 @@
 {
   "name": "react-omni-store",
-  "version": "0.0.1",
+  "version": "0.0.3",
+  "description": "A single React library for all browser storage needs: localStorage, sessionStorage, IndexedDB, and SQLite (WASM).",
+  "author": "",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ADHILSHA/react-omni-store.git"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "storage",
+    "localStorage",
+    "sessionStorage",
+    "indexedDB",
+    "sqlite",
+    "wasm"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "cp ../../README.md ./"
   },
   "peerDependencies": {
     "react": "^19.1.0"
