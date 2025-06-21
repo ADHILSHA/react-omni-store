@@ -2,6 +2,8 @@
 
 A single React library to rule all your browser storage needs. `react-omni-store` provides a set of simple, powerful hooks to manage data in `localStorage`, `sessionStorage`, `IndexedDB`, and even a full `SQLite` database via WebAssembly.
 
+<a href="https://coff.ee/adhil_sha" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 ## Features
 
 - **Unified API**: Simple hooks for complex storage mechanisms.
@@ -15,7 +17,7 @@ A single React library to rule all your browser storage needs. `react-omni-store
 This project is set up as a monorepo. To use the library within this project, you can install dependencies at the root level:
 
 ```bash
-npm install
+npm i react-omni-store
 ```
 
 ## Available Hooks
